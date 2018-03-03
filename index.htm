@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Trevisan Giancarlo">
+  <meta name="contact" content="info@keyvisions.it">
+  <meta name="copyright" content="2018 (c) KeyVisions di Trevisan Giancarlo">
+  <meta name="distribution" content="IU">
+  <meta name="abstract" content="Workleave management">
+  <title>Ferie e Permessi</title>
+  <style>
+    body { font-family: sans-serif; font-size: 10pt; }
+    details { display: block; padding: 0.5em 0; }
+    details > summary { display: block; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="css\workleave.css">
+  <script src="js/calendar.js"></script>
+  <script src="js/employees.js"></script>
+  <script src="js/workleave.js"></script>
+</head>
+
+<body onload="workleave.load('calendario', 'it-IT', 2018)" onbeforeunload="workleave.save()">
+  <form id="request" onchange="workleave.sync(event)">
+    <select name="Employee" required="true">
+      <option selected></option>
+    </select> chiede
+    <select name="Type">
+      <option value="type1">Permesso</option>
+      <option value="type2">Recupero</option>
+      <!--<option value="type4">Malattia</option>-->
+      <option value="type3">Ferie</option>
+      <!--<option value="type5">Festivo</option>-->
+    </select> da <input type="datetime-local" required="true" name="FromDate"> a <input type="time" required="true" name="ToDate">
+    <input type="button" value="Richiedi" id="btnAdd" onclick="workleave.manage(this.id)">
+    <input type="button" value="Approva" id="btnApprove" onclick="workleave.manage(this.id)" style="display: none">
+    <input type="button" value="Elimina" id="btnDelete" onclick="workleave.manage(this.id)" style="display: none">
+    <details>
+      <summary>Info</summary>Inserire una richiesta compilando il modulo, il periodo è selezionabile anche da calendario. N.B. Non è consentita la sovrapponsizione di richieste.
+      <div id="legenda"><label>Legenda</label>:
+        <span class="type0">&nbsp;</span> Lavorativo,
+        <span class="type1">&nbsp;</span> Permesso,
+        <span class="type2">&nbsp;</span> Recupero,
+        <span class="type3">&nbsp;</span> Ferie,
+        <!--<span class="type4">&nbsp;</span> Malattia,-->
+        <span class="type5">&nbsp;</span> Festivo
+      </div>
+    </details>
+  </form>
+  <div id="calendario"></div>
+</body>
+
+</html>
