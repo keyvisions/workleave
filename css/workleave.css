@@ -3,11 +3,11 @@
 
 .year { border-collapse: separate; border-spacing: 0;}
 .year thead {background-color: #fff; position: -webkit-sticky; position: sticky; top: 0; z-index: 1000;}
-.year tr>th:first-of-type { text-align: left; background-color: #fff; position: -webkit-sticky; position: sticky; left: 0; padding: 0 0.5em;}
+.year tr>th:first-of-type { text-align: left; background-color: #fff; position: -webkit-sticky; position: sticky; left: 0; padding: 0.5em;}
 .year th { border: 1px solid #ccc; border-right-color: transparent; border-bottom-color: transparent; width: 2ex; text-transform: capitalize; font-weight: normal; white-space: nowrap;}
 .year td { border: 1px solid #ccc; border-right-color: transparent; border-bottom-color: transparent; padding: 3px; text-align: center;}
 .months th { background-color: #000 !important; color: #fff !important; border: 1px solid #000; border-right-color: transparent; border-bottom-color: transparent; border-left: 1px solid #ccc; font-size: 1.25em; white-space: nowrap; }
-.unit th { background-color: #000 !important; color: #fff !important;}
+.unit th { background-color: #000 !important; color: #fff !important; padding: 0.5em !important;}
 
 /* http://www.patternify.com/ */
 .unconfirmed, .offlimit { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAhSURBVBhXY/gPBAxIAM6HMeACMIBTAC4BZ0DB/////wMAW3Aj3ahR+y0AAAAASUVORK5CYII=) repeat; }

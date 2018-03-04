@@ -44,7 +44,7 @@ let workleave = (function(options) {
 
     let str =
       `<table class="year">
-      <thead><tr class="months"><th>Ferie &amp; Permessi</th>${monthsHeader}</tr><tr class="days"><th>Dipendente</th>${daysHeader}</tr></thead>
+      <thead><tr class="months"><th>Permessi e Ferie</th>${monthsHeader}</tr><tr class="days"><th>Dipendente</th>${daysHeader}</tr></thead>
       <tbody onmousedown="workleave.select(event)" onmousemove="workleave.select(event)" onmouseup="workleave.select(event)">`;
 
     let types = '';
