@@ -55,7 +55,7 @@ let workleave = (function(options) {
     employees.forEach(employee => {
       if (unit !== employee.unit) {
         unit = employee.unit;
-        str += `<tr class="unit"><th>${employee.unit}</th><th colspan="${dayOfYear(new Date(_year, 11, 31))}"></th></tr>`;
+        str += `<tr class="unit"><th>${employee.unit}</th><th colspan="${dayOfYear(new Date(_year, 11, 31)) + 1}"></th></tr>`;
       }
       str += `<tr data-id="${employee.id}"><th>${types}${employee.name}</th>${days}</tr>`;
       _employee.innerHTML += `<option value="${employee.id}">${employee.name}</option>`;
@@ -83,6 +83,19 @@ let workleave = (function(options) {
     let requestType = _type.value;
 
     if (e.currentTarget.tagName === 'DIV') {
+      e.preventDefault();
+
+      if (e.key === 'Insert' && document.getElementById('btnAdd').style.display === '') {
+        document.getElementById('btnAdd').click();
+        return;
+      } else if (e.key === 'Insert' && document.getElementById('btnApprove').style.display === '') {
+        document.getElementById('btnApprove').click();
+        return;
+      } else if (e.key === 'Delete' && document.getElementById('btnDelete').style.display === '') {
+        document.getElementById('btnDelete').click();
+        return;
+      }
+
       if (e.shiftKey && (requestType === 'type1' || requestType === 'type2'))
         _type.value = requestType = 'type3'; // _ferie
       else if (!e.shiftKey && (requestType !== 'type1' && requestType !== 'type2'))
@@ -103,19 +116,6 @@ let workleave = (function(options) {
       _toDate.value = _toDate.getAttribute('type') === 'date' ? fromdate.substr(0, 10) : '10:00';
 
     if (e.currentTarget.tagName === 'DIV') {
-      e.preventDefault();
-
-      if (e.key === 'Insert' && document.getElementById('btnAdd').style.display === '') {
-        document.getElementById('btnAdd').click();
-        return;
-      } else if (e.key === 'Insert' && document.getElementById('btnApprove').style.display === '') {
-        document.getElementById('btnApprove').click();
-        return;
-      } else if (e.key === 'Delete' && document.getElementById('btnDelete').style.display === '') {
-        document.getElementById('btnDelete').click();
-        return;
-      }
-
       if (e.key === 'ArrowDown') {
         let i = _employee.selectedIndex;
         ++_employee.selectedIndex; // Next employee

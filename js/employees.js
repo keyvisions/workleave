@@ -1,4 +1,4 @@
-var employees = JSON.parse(localStorage.getItem('xemployees')) || [
+var employees = JSON.parse(localStorage.getItem('employees')) || [
   {"id":27, "unit": "Arzignano", "name": "mcracco", "requests": [] },
   {"id":42, "unit": "Arzignano", "name": "speripoli", "requests": [] },
   {"id":43, "unit": "Arzignano", "name": "speripolli", "requests": [] },
