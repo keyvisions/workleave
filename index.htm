@@ -15,13 +15,11 @@
     details > summary { display: block; font-weight: bold; }
   </style>
   <link rel="stylesheet" href="css/workleave.css">
-  <script src="js/calendar.js"></script>
-  <script src="js/employees.js"></script>
   <script src="js/workleave.js"></script>
 </head>
 
-<body onload="workleave.load('calendario', 'it-IT', 2018)" onbeforeunload="workleave.save()">
-  <form id="request" onchange="workleave.sync(event)">
+<body onload="Workleave.load('calendario', 'it-IT')" onbeforeunload="Workleave.save()">
+  <form id="request" onchange="Workleave.sync(event)">
     <select name="Employee" required="true">
       <option selected></option>
     </select> chiede
@@ -32,9 +30,9 @@
       <!--<option value="type4">Malattia</option>-->
       <!--<option value="type5">Festivo</option>-->
     </select> da <input type="datetime-local" required="true" name="FromDate"> a <input type="time" required="true" name="ToDate">
-    <input type="button" value="Richiedi" id="btnAdd" onclick="workleave.manage(this.id)">
-    <input type="button" value="Approva" id="btnApprove" onclick="workleave.manage(this.id)" style="display: none">
-    <input type="button" value="Elimina" id="btnDelete" onclick="workleave.manage(this.id)" style="display: none">
+    <input type="button" value="Richiedi" id="btnAdd" onclick="Workleave.manage(this.id)">
+    <input type="button" value="Approva" id="btnApprove" onclick="Workleave.manage(this.id)" style="display: none">
+    <input type="button" value="Elimina" id="btnDelete" onclick="Workleave.manage(this.id)" style="display: none">
     <details>
       <summary>Info</summary>Inserire una richiesta compilando il modulo, il periodo è selezionabile anche da calendario. N.B. Non è consentita la sovrapponsizione di richieste.
       <div id="legenda"><label>Legenda</label>:

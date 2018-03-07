@@ -4,10 +4,12 @@
  * @version 1.0
  */
 
-let workleave = (function(options) {
+let Workleave = (function(options) {
+  var _calendarRules, _employees;
+
   let _r, _n, _request, _calendar, _year, _employee, _type, _fromDate, _toDate;
 
-  function loadCalendar(id, locale, year) {
+  function drawCalendar(id, locale, year) {
     _employee = document.querySelector('[name="Employee"]');
     _type = document.querySelector('[name="Type"]');
     _fromDate = document.querySelector('[name="FromDate"]');
@@ -25,10 +27,10 @@ let workleave = (function(options) {
       let rule = '';
       if (d.getDay() === 0 || d.getDay() === 6) {
         rule = ' class="type5"';
-      } else if (calendarRules.findIndex(el => {
+      } else if (_calendarRules.findIndex(el => {
           return el.fromdate <= d.getTime() && d.getTime() <= el.todate
         }) !== -1) {
-        rule = ` class="${calendarRules[calendarRules.findIndex(el => { return el.fromdate <= d.getTime() && d.getTime() <= el.todate })].type}"`;
+        rule = ` class="${_calendarRules[_calendarRules.findIndex(el => { return el.fromdate <= d.getTime() && d.getTime() <= el.todate })].type}"`;
       }
       daysHeader += `<th${rule}><div>${d.toLocaleDateString(locale, { weekday: 'narrow' })}</div>${d.getDate()}</th>`;
       days += `<td${rule}>&#8195;</td>`;
@@ -45,19 +47,19 @@ let workleave = (function(options) {
     let str =
       `<table class="year">
       <thead><tr class="months"><th>Permessi e Ferie</th>${monthsHeader}</tr><tr class="days"><th>Dipendente</th>${daysHeader}</tr></thead>
-      <tbody onmousedown="workleave.select(event)" onmousemove="workleave.select(event)" onmouseup="workleave.select(event)">`;
+      <tbody onmousedown="Workleave.select(event)" onmousemove="Workleave.select(event)" onmouseup="Workleave.select(event)">`;
 
     let types = '';
     if (options.summary)
       document.querySelectorAll('[name="Type"] option').forEach(option =>
         types += `<span class="${option.value}">&#8195;</span> `);
     let unit = '';
-    employees.forEach(employee => {
+    _employees.forEach(employee => {
       if (unit !== employee.unit) {
         unit = employee.unit;
-        str += `<tr class="unit"><th>${employee.unit}</th><th colspan="${dayOfYear(new Date(_year, 11, 31)) + 1}"></th></tr>`;
+        str += `<tr class="unit" title="${employee.unit}"><th>${employee.unit}</th><th colspan="${dayOfYear(new Date(_year, 11, 31)) + 1}"></th></tr>`;
       }
-      str += `<tr data-id="${employee.id}"><th>${types}${employee.name}</th>${days}</tr>`;
+      str += `<tr data-id="${employee.id}" title="${employee.name}"><th>${types}${employee.name}</th>${days}</tr>`;
       _employee.innerHTML += `<option value="${employee.id}">${employee.name}</option>`;
     });
 
@@ -74,7 +76,7 @@ let workleave = (function(options) {
     _calendar.scrollTop = 0;
     //_calendar.scrollLeft += _calendar.offsetWidth - _calendar.querySelector('th').offsetWidth; // Should offset to middle of page
 
-    employees.forEach(employee => {
+    _employees.forEach(employee => {
       employee.requests.forEach(request => drawRequest(employee.id, request));
     });
   }
@@ -153,7 +155,7 @@ let workleave = (function(options) {
         todate = new Date(_toDate.getAttribute('type') === 'date' ?
           _toDate.value : _fromDate.value.substr(0, 10) + 'T' + _toDate.value);
 
-      let employee = employees.find(employee => {
+      let employee = _employees.find(employee => {
         return employee.id == _employee.value;
       });
       if (employee) {
@@ -224,7 +226,7 @@ let workleave = (function(options) {
       d.setDate(d.getDate() + n - 0.5);
 
       // If part of a request was selected select the whole request
-      _request = employees.find(employee => {
+      _request = _employees.find(employee => {
         return employee.id == _r.getAttribute('data-id');
       }).requests.find(request => {
         return request.status !== 3 && new Date(request.fromdate).setHours(0, 0, 0, 0) <= d && d <= new Date(request.todate).setHours(23, 59, 59, 999);
@@ -273,7 +275,7 @@ let workleave = (function(options) {
   }
 
   function manageRequest(action) {
-    let employee = employees.find(el => {
+    let employee = _employees.find(el => {
       return el.id == _employee.value
     });
 
@@ -351,7 +353,7 @@ let workleave = (function(options) {
   function saveCalendar() {
     // Remove deleted requests
     // Broadcast changes via sockets
-    localStorage.setItem('employees', JSON.stringify(employees));
+    localStorage.setItem('employees', JSON.stringify(_employees));
   }
 
   function broadcastRequest(employeeId, request) {
@@ -366,6 +368,30 @@ let workleave = (function(options) {
   function addDays(date, days) {
     let d = new Date(new Date(date).getTime() + days * 86400000);
     return (new Date(date).getFullYear() !== d.getFullYear() ? new Date(date) : d).toISOString();
+  }
+
+  function requestJSON(url, callback) {
+    var httpReq = new XMLHttpRequest();
+    httpReq.onreadystatechange = function() {
+      if (httpReq.readyState == 4 && httpReq.status == 200)
+        callback(httpReq.responseText);
+    };
+    httpReq.open('GET', url, true);
+    httpReq.send();
+  }
+
+  function loadCalendar(id, locale, year) {
+    requestJSON('./data/calendar.json', function(json) {
+      _calendarRules = JSON.parse(json) || [];
+      _calendarRules.forEach(function(rule) {
+        rule.fromdate = new Date(rule.fromdate);
+        rule.todate = new Date(rule.todate);
+      });
+      requestJSON('./data/employees.json', function(json) {
+        _employees = JSON.parse(json) || [];
+        drawCalendar(id, locale, year);
+      });
+    });
   }
 
   return {

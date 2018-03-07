@@ -1,0 +1,200 @@
+[{
+  "id": 27,
+  "unit": "Arzignano",
+  "name": "mcracco",
+  "requests": []
+}, {
+  "id": 42,
+  "unit": "Arzignano",
+  "name": "speripoli",
+  "requests": []
+}, {
+  "id": 43,
+  "unit": "Arzignano",
+  "name": "speripolli",
+  "requests": []
+}, {
+  "id": 18,
+  "unit": "Montecchio",
+  "name": "ecerisara",
+  "requests": []
+}, {
+  "id": 26,
+  "unit": "Montecchio",
+  "name": "mcolombara",
+  "requests": [{
+    "id": 38,
+    "fromdate": "2018-04-16T00:00:00",
+    "todate": "2018-04-17T00:00:00",
+    "type": "type3",
+    "status": 2
+  }]
+}, {
+  "id": 39,
+  "unit": "Montecchio",
+  "name": "sebanetti",
+  "requests": [{
+    "id": 43,
+    "fromdate": "2018-03-06T15:30:00",
+    "todate": "2018-03-06T18:30:00",
+    "type": "type1",
+    "status": 1
+  }, {
+    "id": 40,
+    "fromdate": "2018-03-07T13:00:00",
+    "todate": "2018-03-07T14:30:00",
+    "type": "type2",
+    "status": 2
+  }, {
+    "id": 39,
+    "fromdate": "2018-03-07T17:00:00",
+    "todate": "2018-03-07T18:30:00",
+    "type": "type1",
+    "status": 2
+  }]
+}, {
+  "id": 34,
+  "unit": "Montecchio",
+  "name": "pmarchioro",
+  "requests": [{
+    "id": 24,
+    "fromdate": "2018-02-26T10:00:00",
+    "todate": "2018-02-26T15:00:00",
+    "type": "type1",
+    "status": 3
+  }, {
+    "id": 25,
+    "fromdate": "2018-02-27T10:00:00",
+    "todate": "2018-02-27T17:00:00",
+    "type": "type2",
+    "status": 3
+  }, {
+    "id": 29,
+    "fromdate": "2018-04-30T00:00:00",
+    "todate": "2018-04-30T00:00:00",
+    "type": "type3",
+    "status": 2
+  }]
+}, {
+  "id": 36,
+  "unit": "Montecchio",
+  "name": "rposenato",
+  "requests": [{
+    "id": 35,
+    "fromdate": "2018-03-05T13:00:00",
+    "todate": "2018-03-05T13:30:00",
+    "type": "type2",
+    "status": 2
+  }, {
+    "id": 34,
+    "fromdate": "2018-03-05T14:30:00",
+    "todate": "2018-03-05T15:00:00",
+    "type": "type1",
+    "status": 2
+  }]
+}, {
+  "id": 28,
+  "unit": "Montecchio",
+  "name": "mromio",
+  "requests": []
+}, {
+  "id": 17,
+  "unit": "Montecchio",
+  "name": "dvisentin",
+  "requests": [{
+    "id": 37,
+    "fromdate": "2018-04-03T00:00:00",
+    "todate": "2018-04-03T00:00:00",
+    "type": "type3",
+    "status": 2
+  }]
+}, {
+  "id": 30,
+  "unit": "Montecchio",
+  "name": "mzanella",
+  "requests": []
+}, {
+  "id": 10,
+  "unit": "Schio",
+  "name": "aadriani",
+  "requests": [{
+    "id": 44,
+    "fromdate": "2018-03-08T13:30:00",
+    "todate": "2018-03-08T16:30:00",
+    "type": "type1",
+    "status": 1
+  }]
+}, {
+  "id": 38,
+  "unit": "Schio",
+  "name": "scomparin",
+  "requests": []
+}, {
+  "id": 16,
+  "unit": "Schio",
+  "name": "ddallaguarda",
+  "requests": []
+}, {
+  "id": 22,
+  "unit": "Schio",
+  "name": "fgolo",
+  "requests": []
+}, {
+  "id": 33,
+  "unit": "Schio",
+  "name": "pguidotti",
+  "requests": []
+}, {
+  "id": 40,
+  "unit": "Schio",
+  "name": "slosare",
+  "requests": []
+}, {
+  "id": 12,
+  "unit": "Schio",
+  "name": "apento",
+  "requests": []
+}, {
+  "id": 19,
+  "unit": "Schio",
+  "name": "eperazzolo",
+  "requests": []
+}, {
+  "id": 20,
+  "unit": "Schio",
+  "name": "eriva",
+  "requests": [{
+    "id": 42,
+    "fromdate": "2018-03-08T11:30:00",
+    "todate": "2018-03-08T14:00:00",
+    "type": "type1",
+    "status": 1
+  }]
+}, {
+  "id": 213,
+  "unit": "Schio",
+  "name": "csossan",
+  "requests": [{
+    "id": 45,
+    "fromdate": "2018-06-01T00:00:00",
+    "todate": "2018-06-01T00:00:00",
+    "type": "type3",
+    "status": 1
+  }]
+}, {
+  "id": 212,
+  "unit": "Schio",
+  "name": "mvisona",
+  "requests": []
+}, {
+  "id": 13,
+  "unit": "Schio",
+  "name": "azordan",
+  "requests": [{
+    "id": 41,
+    "fromdate": "2018-03-08T15:00:00",
+    "todate": "2018-03-08T17:00:00",
+    "type": "type1",
+    "status": 2
+  }]
+}]
