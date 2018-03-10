@@ -4,21 +4,19 @@
  * @version 1.0
  */
 
-let Workleave = (function(options) {
-  var _calendarRules, _employees;
+let Workleave = (function() {
+  let _calendarRules, _employees, _options;
 
   let _r, _n, _request, _calendar, _year, _employee, _type, _fromDate, _toDate;
 
-  function drawCalendar(id, locale, year) {
+  function drawCalendar(id) {
     _employee = document.querySelector('[name="Employee"]');
     _type = document.querySelector('[name="Type"]');
     _fromDate = document.querySelector('[name="FromDate"]');
     _toDate = document.querySelector('[name="ToDate"]');
 
-    _year = year || (new Date()).getFullYear();
-
     let d = new Date(_year, 0, 1),
-      month = 0,
+      month = d.getMonth(),
       monthsHeader = '',
       daysHeader = '',
       days = '';
@@ -28,29 +26,29 @@ let Workleave = (function(options) {
       if (d.getDay() === 0 || d.getDay() === 6) {
         rule = ' class="type5"';
       } else if (_calendarRules.findIndex(el => {
-          return el.fromdate <= d.getTime() && d.getTime() <= el.todate
+          return el.fromdate <= d.getTime() && d.getTime() <= el.todate;
         }) !== -1) {
         rule = ` class="${_calendarRules[_calendarRules.findIndex(el => { return el.fromdate <= d.getTime() && d.getTime() <= el.todate })].type}"`;
       }
-      daysHeader += `<th${rule}><div>${d.toLocaleDateString(locale, { weekday: 'narrow' })}</div>${d.getDate()}</th>`;
+      daysHeader += `<th${rule}><div>${d.toLocaleDateString(undefined, { weekday: 'narrow' })}</div>${d.getDate()}</th>`;
       days += `<td${rule}>&#8195;</td>`;
 
       d.setDate(d.getDate() + 1);
 
       if (month !== d.getMonth()) {
         var lastDay = new Date(d.getTime() - 1);
-        monthsHeader += `<th colspan="${lastDay.getDate()}">${lastDay.toLocaleDateString(locale, { year: 'numeric', month: 'long' })}</th>`;
-        ++month;
+        monthsHeader += `<th colspan="${lastDay.getDate()}">${lastDay.toLocaleDateString(undefined, { _year: 'numeric', month: 'long' })}</th>`;
+        month = d.getMonth();
       }
-    } while (month < 12);
+    } while (d.getFullYear() <= _year);
 
     let str =
       `<table class="year">
       <thead><tr class="months"><th>Permessi e Ferie</th>${monthsHeader}</tr><tr class="days"><th>Dipendente</th>${daysHeader}</tr></thead>
-      <tbody onmousedown="Workleave.select(event)" onmousemove="Workleave.select(event)" onmouseup="Workleave.select(event)">`;
+      <tbody ${_options.editable ? 'onmousedown="Workleave.select(event)" onmousemove="Workleave.select(event)" onmouseup="Workleave.select(event)"' : ''}>`;
 
     let types = '';
-    if (options.summary)
+    if (_options.details)
       document.querySelectorAll('[name="Type"] option').forEach(option =>
         types += `<span class="${option.value}">&#8195;</span> `);
     let unit = '';
@@ -67,10 +65,11 @@ let Workleave = (function(options) {
 
     _calendar = document.getElementById(id);
     _calendar.setAttribute('tabindex', '0');
-    _calendar.addEventListener('keydown', syncRequest);
+    if (_options.editable)
+      _calendar.addEventListener('keydown', syncRequest);
     _calendar.innerHTML = str;
 
-    d = _calendar.querySelector('tr:nth-child(2)').children[dayOfYear(new Date()) + 1];
+    d = _calendar.querySelector('tr:nth-child(2)').children[dayOfYear(new Date())];
     d.classList.add('today');
     d.previousSibling.scrollIntoView();
     _calendar.scrollTop = 0;
@@ -79,6 +78,8 @@ let Workleave = (function(options) {
     _employees.forEach(employee => {
       employee.requests.forEach(request => drawRequest(employee.id, request));
     });
+
+    _calendarRules = undefined;
   }
 
   function syncRequest(e) {
@@ -200,7 +201,7 @@ let Workleave = (function(options) {
 
     if (fromdate) {
       _fromDate.value = new Date(fromdate).toISOString().substr(0, 10) + (_fromDate.getAttribute('type') === 'date' ? '' : 'T08:00');
-      _toDate.value = document.querySelector('[name="ToDate"]').getAttribute('type') === 'date' ? new Date(fromdate).toISOString().substr(0, 10) : '10:00';
+      _toDate.value = _toDate.getAttribute('type') === 'date' ? new Date(fromdate).toISOString().substr(0, 10) : '10:00';
     }
     if (!_fromDate.value)
       _calendar.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
@@ -261,7 +262,7 @@ let Workleave = (function(options) {
             _r.children[i].classList.add('selected');
       }
 
-      if (options.summary)
+      if (_options.details)
         document.querySelectorAll('[name="Type"] option').forEach(option =>
           _r.children[0].innerHTML += `<span class="${option.value}">${_r.querySelectorAll('.' + option.value).length}</span>`);
     }
@@ -275,6 +276,9 @@ let Workleave = (function(options) {
   }
 
   function manageRequest(action) {
+    if (!_options.editable)
+      return;
+
     let employee = _employees.find(el => {
       return el.id == _employee.value
     });
@@ -283,12 +287,13 @@ let Workleave = (function(options) {
       switch (action) {
         case 'btnAdd':
           _request = {
-            fromdate: new Date(_fromDate.value).toISOString(),
-            todate: new Date(document.querySelector('[name="ToDate"]').getAttribute('type') === 'date' ?
-              document.querySelector('[name="ToDate"]').value : _fromDate.value.substr(0, 10) + 'T' + (document.querySelector('[name="ToDate"]').value || '00:00')).toISOString(),
+            fromdate: _fromDate.value,
+            todate: _toDate.getAttribute('type') === 'date' ?
+              _toDate.value : _fromDate.value.substr(0, 10) + 'T' + (_toDate.value || '23:59'),
             type: _type.value,
             status: 1
           };
+//          if (new Date(_request.fromdate) > new Date(_request.todate)) {
           if (_request.fromdate > _request.todate) {
             let tmp = _request.fromdate;
             _request.fromdate = _request.todate;
@@ -324,10 +329,10 @@ let Workleave = (function(options) {
     if (isNaN(new Date(request.fromdate)) || isNaN(new Date(request.todate)))
       return;
 
-    let td = _calendar.querySelector(`tr[data-id="${employeeId}"]`).children[dayOfYear(request.fromdate) + 1],
+    let td = _calendar.querySelector(`tr[data-id="${employeeId}"]`).children[dayOfYear(request.fromdate)],
       _n = dayOfYear(request.todate) - dayOfYear(request.fromdate);
     do {
-      if (td.classList.contains('type5')) {
+      if (td.classList.contains('type5') || !_options.editable) {
         td.className = 'type5';
         if (select)
           td.classList.add('selected');
@@ -339,13 +344,13 @@ let Workleave = (function(options) {
           td.className = request.type + (request.status === 2 ? '' : ' unconfirmed');
         if (select)
           td.classList.add('selected');
-        if (request.type === 'type1' || request.type === 'type2')
-          td.innerHTML = Math.ceil((new Date(request.todate).getTime() - new Date(request.fromdate).getTime()) / 3600000);
+        if (_options.details && (request.type === 'type1' || request.type === 'type2'))
+          td.innerHTML = Math.ceil((new Date(request.todate).getTime() - new Date(request.fromdate).getTime()) / 360000) / 10; // One decimal place
         else
           td.innerHTML = '&#8195;';
       }
       td = td.nextSibling;
-    } while (--_n >= 0);
+    } while (_n-- > 0);
 
     return td;
   }
@@ -362,7 +367,8 @@ let Workleave = (function(options) {
 
   function dayOfYear(date) {
     date = new Date(date);
-    return Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000) - 1;
+    date = new Date(date - date.getTimezoneOffset() * 60000);
+    return Math.floor((date - new Date(date.getFullYear(), 0, 1)) / 86400000) + 1;
   }
 
   function addDays(date, days) {
@@ -380,7 +386,16 @@ let Workleave = (function(options) {
     httpReq.send();
   }
 
-  function loadCalendar(id, locale, year) {
+  function loadCalendar(id, options = {}) {
+    _options = {
+      editable: options.editable || true,
+      fromdate: options.fromdate || new Date(new Date().getFullYear(), 0, 1),
+      todate: options.todate || new Date(new Date().getFullYear(), 11, 31),
+      details: options.details || false
+    };
+
+    _year = new Date(_options.fromdate).getFullYear();
+
     requestJSON('./data/calendar.json', function(json) {
       _calendarRules = JSON.parse(json) || [];
       _calendarRules.forEach(function(rule) {
@@ -389,7 +404,7 @@ let Workleave = (function(options) {
       });
       requestJSON('./data/employees.json', function(json) {
         _employees = JSON.parse(json) || [];
-        drawCalendar(id, locale, year);
+        drawCalendar(id);
       });
     });
   }
@@ -401,4 +416,4 @@ let Workleave = (function(options) {
     manage: manageRequest,
     save: saveCalendar
   }
-})({});
+})({editable: false});
